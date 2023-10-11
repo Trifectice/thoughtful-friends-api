@@ -1,36 +1,49 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
-const UserSchema = new Schema({
+const ReactionSchema = new Schema({
+  reactionId: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId()
+  },
+  reactionBody: {
+    type: String,
+    required: true,
+    maxLength: 280
+  },
   username: {
     type: String,
-    unique: true,
-    required: true,
-    trim: true
+    required: true
   },
-  email: {
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: createdAtVal => dateFormat(createdAtVal)
+  }
+});
+
+const ThoughtSchema = new Schema({
+  thoughtText: {
     type: String,
     required: true,
-    unique: true,
-    match: [/.+@.+\..+/, 'Must match an email address']
+    minLength: 1,
+    maxLength: 280
   },
-  thoughts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Thought'
-    }
-  ],
-  friends: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ]
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: createdAtVal => dateFormat(createdAtVal)
+  },
+  username: {
+    type: String,
+    required: true
+  },
+  reactions: [ReactionSchema]
 });
 
-UserSchema.virtual('friendCount').get(function() {
-  return this.friends.length;
+ThoughtSchema.virtual('reactionCount').get(function() {
+  return this.reactions.length;
 });
 
-const User = model('User', UserSchema);
+const Thought = model('Thought', ThoughtSchema);
 
-module.exports = User;
+module.exports = Thought;
