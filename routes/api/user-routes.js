@@ -9,6 +9,15 @@ const {
   removeFriend
 } = require('../../controllers/user-controller');
 
+
+console.log("getAllUsers:", getAllUsers); 
+console.log("createUser:", createUser);
+console.log("updateUser:", updateUser);
+console.log("deleteUser:", deleteUser);
+console.log("addFriend:", addFriend);
+console.log("removeFriend:", removeFriend);
+
+
 // Set up GET all and POST at /api/users
 router
   .route('/')
